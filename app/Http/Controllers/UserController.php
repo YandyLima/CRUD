@@ -95,6 +95,8 @@ class UserController extends Controller
     {
         $datosUsers = request()->except(['_token', '_method']);
 
+        $user = User::find($id);
+
         if ($request->hasfile('Foto')) {
             $user=User::findOrFail($id);
 
