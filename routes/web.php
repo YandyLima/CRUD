@@ -21,10 +21,3 @@ Route::get('/', function () {
 
 Route::resource('/users', UserController::class);
 
-/*
-Route::get('/users', function () {
-    return view('app.index');
-});
-
-Route::get('users/create', [UserController::class,'create']);
-*/
