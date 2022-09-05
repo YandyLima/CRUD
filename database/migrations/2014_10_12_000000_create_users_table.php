@@ -21,7 +21,7 @@ class CreateUsersTable extends Migration
             $table->string('ApellidoMaterno');
             $table->date('FechaNac');
             $table->string('email')->unique();
-            $table->file('Foto');
+            $table->string('Foto');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
