@@ -30,7 +30,8 @@ class UserUpdateRequest extends FormRequest
             "ApellidoMaterno"=> ["required","string", "max:50"],
             "FechaNac"=> ["required","date"],
             "email"=> ["required","email", Rule::unique('users', 'email')->ignore($this->user)],
-            "Foto"=> [ "image"]
+            "Foto"=> [ "image"],
+            "password"=>["nullable"]
         ];
     }
 }

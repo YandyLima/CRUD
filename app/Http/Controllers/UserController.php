@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\UserStoreRequest;
 use App\Http\Requests\UserUpdateRequest;
 use App\Models\User;
+use Illuminate\Foundation\Auth\User as AuthUser;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
 
@@ -21,7 +23,7 @@ class UserController extends Controller
         //$users=User::paginate(5);
         //return view('app.users',compact('users'));
 
-        $datos['users']=User::paginate(5);
+        $datos['users'] = User::paginate(5);
         return view('app.index', $datos);
     }
 
@@ -43,18 +45,18 @@ class UserController extends Controller
      */
     public function store(UserStoreRequest $request)
     {
-        //
-        //$datosUsers = request()->all();
-        $datosUsers = request()->except('_token');
+        $validated = $request->validated();
 
-        if($request->hasFile('Foto')){
-        $datosUsers['Foto']=$request->file('Foto')->store('uploads', 'public');
+        if ($validated['Foto']) {
+            $fileName = $request->file('Foto')->store('uploads', 'public');
         }
 
-        User::insert($datosUsers);
-        
-        //return response()->json($datosUsers);
-        return redirect('users')->with('mensaje','Usuario Agregado Con Exito');
+        $validated['password'] = Hash::make($validated['password']);
+
+        $validated['Foto'] = $fileName;
+
+        User::create($validated);
+        return redirect('users')->with('mensaje', 'Usuario Agregado Con Exito');
     }
 
     /**
@@ -77,9 +79,9 @@ class UserController extends Controller
     public function edit($id)
     {
         //
-        $user=User::findOrFail($id);
+        $user = User::findOrFail($id);
 
-        return view ('app.edit', compact('user'));
+        return view('app.edit', compact('user'));
     }
 
     /**
@@ -91,21 +93,27 @@ class UserController extends Controller
      */
     public function update(UserUpdateRequest $request, $id)
     {
-       //dd($request->all(), $id);
-        $datosUsers = request()->except(['_token','_method']);
+        $datosUsers = request()->except(['_token', '_method']);
 
-        $user=User::find($id);
+        if ($request->hasfile('Foto')) {
+            $user=User::findOrFail($id);
 
-        if($request->file('Foto')){
-           $fileName=$user->Foto;
+            
+                // aquí la borro
+                Storage::delete('public/'.$user->Foto);
+            
+            $datosUsers['Foto'] = $request->file('Foto')->store('uploads', 'public');
 
-           $request->file('Foto')->storeAs('uploads', basename($fileName), 'public');
+        }
 
-            $datosUsers['Foto']=$request->file('Foto')->store('uploads', 'public');
-            }
+        if (!$request->password) {
+            $datosUsers['password'] = $user->password;
+        } else {
+            $datosUsers['password'] = Hash::make($request->password);
+        }
 
         $user->update($datosUsers);
-        return view ('app.edit', compact('user'));
+        return view('app.edit', compact('user'));
     }
 
     /**
@@ -116,12 +124,12 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
- 
-        $user=User::findOrFail($id);
-            if(storage::delete('public/'.$user->Foto)){
-                User::destroy($id);
-            };
 
-        return redirect('users')->with('mensaje','Usuario Borrado Con Exito');
+        $user = User::findOrFail($id);
+        storage::delete('public/' . $user->Foto);
+            User::destroy($id);
+        
+
+        return redirect('users')->with('mensaje', 'Usuario Borrado Con Exito');
     }
 }

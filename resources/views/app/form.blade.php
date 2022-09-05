@@ -62,7 +62,7 @@
         </div>
         <div class="mb-3">
             <label for="exampleInputPassword1" class="form-label">Contraseña</label>
-            <input  type="text" class="form-control" value="{{ isset($user->password) ? $user->password : old('password') }}"
+            <input  type="password" class="form-control"
                 id="password" name="password">
                 @error('password')
                 <div class="alert alert-danger" role="alert">

@@ -29,9 +29,9 @@ class UserStoreRequest extends FormRequest
             "ApellidoMaterno"=> ["required", "string", "max:50"],
             "FechaNac"=> ["required", "date"],
             "email"=> ["required", "email", "unique:users"],
-            "Foto"=> ["required", "image"]
+            "Foto"=> ["required", "image"],
+            "password"=>["required"]
         ];
     }
 }
 
-// "mimes:jpg, jpeg, png"

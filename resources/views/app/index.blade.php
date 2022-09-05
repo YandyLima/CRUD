@@ -42,7 +42,7 @@
                       
                         @foreach ($users as $user)
                             <tr>
-                                <td>{{ $count++ }}</td>
+                                <td>{{ $user->id }}</td>
                                 <td>{{ $user->name }}</td>
                                 <td>{{ $user->ApellidoPaterno }}</td>
                                 <td>{{ $user->ApellidoMaterno }}</td>
@@ -89,6 +89,7 @@
                     </tbody>
 
                 </table>
+                {{ $users->render() }}
             </div>
         </div>
 
