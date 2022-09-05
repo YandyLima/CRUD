@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('app.home');
+    //return redirect()->route('users.index');
 });
 
 Route::resource('/users', UserController::class);
