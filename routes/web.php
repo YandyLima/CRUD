@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,9 +15,13 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('app.home');
-    //return redirect()->route('users.index');
+    return redirect('/login');
 });
 
-Route::resource('/users', UserController::class);
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth'])->name('dashboard');
 
+Route::get('/profile', [ProfileController::class,'profile'])->middleware(['auth'])->name('profile');
+
+require __DIR__.'/auth.php';
